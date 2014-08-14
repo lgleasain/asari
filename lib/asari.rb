@@ -72,6 +72,7 @@ class Asari
 
     url = "http://search-#{search_domain}.#{aws_region}.cloudsearch.amazonaws.com/#{api_version}/search"
 
+    Rails.logger.debug options
     if api_version == '2013-01-01'
       if options[:filter]
         url += "?q=#{CGI.escape(bq)}"
@@ -182,11 +183,16 @@ class Asari
 
     options = { :body => request_query.to_json, :headers => { "Content-Type" => "application/json"} }
 
+    Rails.logger.debug endpoint
+    Rails.logger.debug options
     begin
       response = HTTParty.post(endpoint, options)
+      Rails.logger.debug response
+      response
     rescue Exception => e
       ae = Asari::DocumentUpdateException.new("#{e.class}: #{e.message}")
       ae.set_backtrace e.backtrace
+      Rails.logger.debug ae
       raise ae
     end
 
@@ -202,7 +208,7 @@ class Asari
     query = { "type" => "add", "id" => id.to_s, "version" => Time.now.to_i, "lang" => "en" }
     fields.each do |k,v|
       fields[k] = convert_date_or_time(fields[k])
-      fields[k] = "" if v.nil?
+      fields.delete k if v.nil?
     end
 
     query["fields"] = fields

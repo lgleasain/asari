@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "asari/version"
 
 Gem::Specification.new do |s|
-  s.name        = "asari"
+  s.name        = "asari_play"
   s.version     = Asari::VERSION
   s.authors     = ["Tommy Morgan"]
   s.email       = ["tommy@wellbredgrapefruit.com"]
